@@ -1,0 +1,1 @@
+{:linters {:invalid-arity {:level :off} :unresolved-symbol {:level :off}}}
