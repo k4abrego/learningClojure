@@ -23,5 +23,9 @@
          (is (= '(1 0 4 25 100)
                 ((argswap map) '(-1 0 2 5 10) #(* % %)))))
 
+;2.
+(defn there-exists-one
+      []
+      ())
 
 (run-tests)
