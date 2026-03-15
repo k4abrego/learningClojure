@@ -59,3 +59,48 @@
 (f3 1)
 (f4 1)
 (f5 1)
+
+
+
+
+
+
+;----------------------------------------------------------
+;4.
+(defn rotate-left
+      [n s]
+      (if (empty? s)
+        ()
+        (let [len (count s)
+              k (mod n len)
+              parts (split-at k s)]
+             (concat (second parts) (first parts)))))
+
+;----------------------------------------------------------
+;7.
+(defn gcd
+      [a b]
+      (loop [a a
+             b b]
+            (if (zero? b)
+              a
+              (recur b (rem a b)))))
+
+;----------------------------------------------------------
+;8.
+(defn insert-everywhere
+      [x s]
+      (map (fn [i]
+               (concat (take i s)
+                       (list x)
+                       (drop i s)))
+           (range (inc (count s)))))
+
+;----------------------------------------------------------
+;9.
+(defn contains-all-digits?
+      [n]
+      (and (not (neg? n))
+           (= (set "0123456789")
+              (set (str n)))))
+
