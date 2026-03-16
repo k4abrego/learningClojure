@@ -85,9 +85,29 @@
 
 ;----------------------------------------------------------
 ;4.
+(defn rotate-left [n s]
+      (let [len (count s)]
+           (if (zero? len)
+             '()
+             (let [k (mod n len)]
+                  (concat (drop k s) (take k s))))))
 
+(rotate-left 3 '(a b c d e f g)) ;=> (d e f g a b c)
+(rotate-left 2 '(1 2 3 4 5)) ;=> (3 4 5 1 2)
 
-
+(deftest test-rotate-left
+         (is (= () (rotate-left 5 ())))
+         (is (= '(a b c d e f g) (rotate-left 0 '(a b c d e f g))))
+         (is (= '(b c d e f g a) (rotate-left 1 '(a b c d e f g))))
+         (is (= '(g a b c d e f) (rotate-left -1 '(a b c d e f g))))
+         (is (= '(d e f g a b c) (rotate-left 3 '(a b c d e f g))))
+         (is (= '(e f g a b c d) (rotate-left -3 '(a b c d e f g))))
+         (is (= '(a b c d e f g) (rotate-left 7 '(a b c d e f g))))
+         (is (= '(a b c d e f g) (rotate-left -7 '(a b c d e f g))))
+         (is (= '(b c d e f g a) (rotate-left 8 '(a b c d e f g))))
+         (is (= '(g a b c d e f) (rotate-left -8 '(a b c d e f g))))
+         (is (= '(d e f g a b c) (rotate-left 45 '(a b c d e f g))))
+         (is (= '(e f g a b c d) (rotate-left -45 '(a b c d e f g)))))
 ;----------------------------------------------------------
 
 ;5.
@@ -158,7 +178,7 @@
               (recur n
                      result
                      (inc divisor)))))
-(prime-factors 666)
+(prime-factors 666) ;=> (2 3 3 37)
 
 (deftest test-prime-factors
          (is (= () (prime-factors 1)))
@@ -169,12 +189,78 @@
 
 ;----------------------------------------------------------
 ;7
+(defn gcd [a b]
+      (if (= b 0)
+        a
+        (recur b (mod a b))))
+(gcd 20 16) ;=> 4
+
+(deftest test-gcd
+         (is (= 1 (gcd 13 7919)))
+         (is (= 4 (gcd 20 16)))
+         (is (= 6 (gcd 54 24)))
+         (is (= 7 (gcd 6307 1995)))
+         (is (= 12 (gcd 48 180)))
+         (is (= 14 (gcd 42 56))))
 
 ;----------------------------------------------------------
 ;8.
+(defn insert-everywhere [x s]
+      (if (empty? s)
+        (list (list x))
+        (let [rest-insertions (insert-everywhere x (rest s))]
+             (cons
+               (cons x s)
+               (map #(cons (first s) %) rest-insertions)))))
+
+(insert-everywhere 1 '(* * * *))
+
+(deftest test-insert-everywhere
+         (is (= '((1)) (insert-everywhere 1 ())))
+         (is (= '((1 a) (a 1)) (insert-everywhere 1 '(a))))
+         (is (= '((1 a b c) (a 1 b c) (a b 1 c) (a b c 1))
+                (insert-everywhere 1 '(a b c))))
+         (is (= '((1 a b c d e)
+                  (a 1 b c d e)
+                  (a b 1 c d e)
+                  (a b c 1 d e)
+                  (a b c d 1 e)
+                  (a b c d e 1))
+                (insert-everywhere 1 '(a b c d e))))
+         (is (= '((x 1 2 3 4 5 6 7 8 9 10)
+                  (1 x 2 3 4 5 6 7 8 9 10)
+                  (1 2 x 3 4 5 6 7 8 9 10)
+                  (1 2 3 x 4 5 6 7 8 9 10)
+                  (1 2 3 4 x 5 6 7 8 9 10)
+                  (1 2 3 4 5 x 6 7 8 9 10)
+                  (1 2 3 4 5 6 x 7 8 9 10)
+                  (1 2 3 4 5 6 7 x 8 9 10)
+                  (1 2 3 4 5 6 7 8 x 9 10)
+                  (1 2 3 4 5 6 7 8 9 x 10)
+                  (1 2 3 4 5 6 7 8 9 10 x))
+                (insert-everywhere 'x '(1 2 3 4 5 6 7 8 9 10)))))
 
 ;----------------------------------------------------------
 ;9.
+(defn contains-all-digits? [n]
+      (let [digits (set (map #(Character/getNumericValue %)
+                             (str (if (neg? n) (- n) n))))]
+           (= (count digits) 10)))
+
+(contains-all-digits? 1023456789) ;=> true
+(contains-all-digits? 102345) ;=> false
+
+(deftest test-contains-all-digits?
+         (is (contains-all-digits? 1023456789))
+         (is (contains-all-digits? 5897230146))
+         (is (contains-all-digits? 10123485679))
+         (is (contains-all-digits?
+               1223334444555566666677777778888888889999999990))
+         (is (not (contains-all-digits? 1236)))
+         (is (not (contains-all-digits? 1112223334455)))
+         (is (not (contains-all-digits? -587230462413578)))
+         (is (not (contains-all-digits?
+                    -122333444455556666667777777888888888999999999))))
 
 ;----------------------------------------------------------
 ;10.
