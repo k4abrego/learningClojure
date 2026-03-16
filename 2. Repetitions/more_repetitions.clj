@@ -266,18 +266,80 @@
 ;10.
 (defn pack
       [s]
-      ())
+      (partition-by identity s))
 
-(run-tests)
+(pack '(1 1 2 2 3 3 4)) ;=> ((1 1) (2 2) (3 3) (4))
+
+(deftest test-pack
+         (is (= () (pack ())))
+         (is (= '((a a a a) (b) (c c) (a a) (d) (e e e e))
+                (pack '(a a a a b c c a a d e e e e))))
+         (is (= '((1) (2) (3) (4) (5)) (pack '(1 2 3 4 5))))
+         (is (= '((9 9 9 9 9 9 9 9 9)) (pack '(9 9 9 9 9 9 9 9 9)))))
 
 ;----------------------------------------------------------
 ;11.
+(defn compress [s]
+      (map first (partition-by identity s)))
 
+(compress '(a a a a b c c c c d d)) ;=> (a b c d)
+
+(deftest test-compress
+         (is (= () (compress ())))
+         (is (= '(a b c d) (compress '(a b c d))))
+         (is (= '(a b c a d e)
+                (compress '(a a a a b c c a a d e e e e))))
+         (is (= '(a) (compress '(a a a a a a a a a a)))))
 ;----------------------------------------------------------
 ;12.
+(defn encode [s]
+      (map (fn [grp] [(count grp) (first grp)])
+           (partition-by identity s)))
 
+(encode '(1 2 3 4)) ;=> ([1 1] [1 2] [1 3] [1 4])
+
+(deftest test-encode
+         (is (= () (encode ())))
+         (is (= '([4 a] [1 b] [2 c] [2 a] [1 d] [4 e])
+                (encode '(a a a a b c c a a d e e e e))))
+         (is (= '([1 1] [1 2] [1 3] [1 4] [1 5])
+                (encode '(1 2 3 4 5))))
+         (is (= '([9 9]) (encode '(9 9 9 9 9 9 9 9 9)))))
 ;----------------------------------------------------------
 ;13.
+(defn encode-modified [s]
+      (map (fn [g]
+               (let [cnt (count g)
+                     elem (first g)]
+                    (if (= cnt 1)
+                      elem
+                      [cnt elem])))
+           (partition-by identity s)))
+
+(encode-modified '(1 2 2 2 3 4 4 5)) ;=> (1 [3 2] 3 [2 4] 5)
+
+(deftest test-encode-modified
+         (is (= () (encode-modified ())))
+         (is (= '([4 a] b [2 c] [2 a] d [4 e])
+                (encode-modified '(a a a a b c c a a d e e e e))))
+         (is (= '(1 2 3 4 5) (encode-modified '(1 2 3 4 5))))
+         (is (= '([9 9]) (encode-modified '(9 9 9 9 9 9 9 9 9)))))
 
 ;----------------------------------------------------------
 ;14.
+(defn decode [s]
+      (mapcat (fn [x]
+                  (if (vector? x)
+                    (repeat (first x) (second x))
+                    [x]))
+              s))
+(decode '(1 [3 2] 3 [2 4] 5)) ;=> (1 2 2 2 3 4 4 5)
+
+(deftest test-decode
+         (is (= () (decode ())))
+         (is (= '(a a a a b c c a a d e e e e)
+                (decode '([4 a] b [2 c] [2 a] d [4 e]))))
+         (is (= '(1 2 3 4 5) (decode '(1 2 3 4 5))))
+         (is (= '(9 9 9 9 9 9 9 9 9) (decode '([9 9])))))
+
+(run-tests)
