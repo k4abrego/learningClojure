@@ -1,4 +1,6 @@
-(ns parallelism)
+(ns parallelism
+  (:require [clojure.core.match :refer [action-for-row]]
+            [clojure.core.match.java :refer [bean-match]]))
 
 ;1.
 (defn bits
@@ -57,12 +59,66 @@
 
 
 
+(defn create-random-data
+      [n]
+      (repeatedly n #(rand-int 1000)))
+
+(create-random-data 100)
+
+(defn insertion-sort
+      [s]
+      (loop [s s
+             r ()]
+            (if (empty? s)
+              r
+              (let [x (first s)
+                    [before after] (split-with #(< % x) r)]
+                   (recur (rest s)
+                          (concat before [x] after))))))
+
+;(apply <= (insertion-sort (create-random-data )))
 
 
+(defn merge-algorithm
+      [a b]
+      (loop [a a
+             b b
+             r []]
+            (cond
+              (empty? a)
+              (concat r b)
+
+              (empty? b)
+              (concat r a)
+
+              (< (first a) (first b))
+              (recur (rest a)
+                     b
+                     (conj r (first a)))
+              :else
+              (recur a
+                     (rest b)
+                     (conj r (first b))))))
+
+;(merge-algorithm [1 4 6 9] [2 3 5 7 8 10]) ;=> (1 2 3 4 5 6 7 8 9 10)
+
+(defn hybrid-sort-seq
+      [s]
+      (if (< (count s) 100)
+        (insertion-sort s)
+        (let [[a b] (split-at (quot (count s) 2) s)]
+             (merge-algorithm (hybrid-sort-seq a)
+                              (hybrid-sort-seq b)))))
+
+(defn hybrid-sort-par
+      [s]
+      (if (< (count s) 100)
+        (insertion-sort s)
+        (let [splitted (split-at (quot (count s) 2) s)]
+             (apply merge-algorithm (pmap hybrid-sort-par splitted)))))
 
 
-
-
-
-
+(def n 1000)
+;(time (apply <= (hybrid-sort-seq (create-random-data n))))
+(time (apply <= (hybrid-sort-par (create-random-data n))))
 
