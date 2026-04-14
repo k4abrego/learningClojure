@@ -123,3 +123,22 @@
   (is (= 'scalene (type-of-triangle 7.1 6.4 9.2))))
 
 (run-tests) ;load file in REPL
+
+
+
+
+(defn mystery
+      ([x] (mystery x #(* 2 %) #(inc %)))
+      ([a b c] (c (b a))))
+
+(defn wierd
+      [& t]
+      (let [n (count t)]
+           (cond
+             (zero? n) 1
+             :else (inc (apply wierd (rest t))))))
+
+(mystery 5)
+(wierd 4 8 15 16 23 42)
+(mystery 2 dec inc)
+(mystery 10 wierd (fn [z] (* z z)))x
