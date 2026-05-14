@@ -2,7 +2,7 @@
 <module type="JAVA_MODULE" version="4">
   <component name="BuildSystem">
     <option name="buildSystemId" value="CLOJURE_DEPS" />
-    <option name="displayName" value="comp-methods" />
+    <option name="displayName" value="learningClojure" />
   </component>
   <component name="NewModuleRootManager" inherit-compiler-output="true">
     <exclude-output />
@@ -13,6 +13,9 @@
       <sourceFolder url="file://$MODULE_DIR$/2. Repetitions" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/3. High-Order Functions" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/4. Parallelism" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/5. Automata" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/work_files" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/6. Regular Expressions" isTestSource="false" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
