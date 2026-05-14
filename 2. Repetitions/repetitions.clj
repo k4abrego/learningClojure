@@ -40,6 +40,8 @@
   (map list s))
 
 (enlist [1 2 3 4])
+(enlist '((1 2 3) 4 (5) 7 8))
+
 (deftest test-enlist
   (is (= () (enlist ())))
   (is (= '((a) (b) (c)) (enlist '(a b c))))
@@ -212,7 +214,7 @@
     1
     (*' a (pow a (- b 1)))))
 
-(pow 2 100)
+(pow 2 10)
 
 (deftest test-pow
   (is (= 1 (pow 0 0)))
