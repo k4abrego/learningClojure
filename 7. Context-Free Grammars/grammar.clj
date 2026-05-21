@@ -61,7 +61,9 @@
 ;Problem 6
 (def a-plus-b-equals-c (parser "
   P = epsilon
-  |
+  | 'a' 'b' 'c' 'c' P
+  | 'a' 'c' P
+  | 'b' 'c' P
 "))
 
 
