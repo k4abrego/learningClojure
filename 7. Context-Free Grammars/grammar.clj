@@ -45,6 +45,25 @@
   | '(' P ')' P
 "))
 
+;Problem 4
+(def o-in-the-middle (parser "
+  P = epsilon
+  | P 'o' P
+"))
+
+
+;Problem 5
+(def twice (parser "
+  P = epsilon
+  | 'x' 'x' 'y' P
+"))
+
+;Problem 6
+(def a-plus-b-equals-c (parser "
+  P = epsilon
+  |
+"))
+
 
 ;tests
 ;1
@@ -95,5 +114,65 @@
          (is (fails? (balanced-parentheses "))))((((")))
          (is (fails? (balanced-parentheses
                        "(()()())((())(()()()))((((())))"))))
+
+;4
+(deftest test-o-in-the-middle
+         (is (succeeds? (o-in-the-middle "o")))
+         (is (succeeds? (o-in-the-middle "xox")))
+         (is (succeeds? (o-in-the-middle "oooooxxxx")))
+         (is (succeeds? (o-in-the-middle "oxxoooxooxoxoxx")))
+         (is (succeeds? (o-in-the-middle "ooooooooooooooo")))
+         (is (succeeds? (o-in-the-middle "xxxxxxxxxxoxxxxxxxxxx")))
+         (is (fails? (o-in-the-middle "")))
+         (is (fails? (o-in-the-middle "ox")))
+         (is (fails? (o-in-the-middle "oxo")))
+         (is (fails? (o-in-the-middle "oxxoooxxoxoxoxx")))
+         (is (fails? (o-in-the-middle "xxxxxxxxxxxxxxxxxxxxx")))
+         (is (fails? (o-in-the-middle "oooooooooooooooooooooo"))))
+
+;5
+(deftest test-twice
+         (is (succeeds? (twice "xxy")))
+         (is (succeeds? (twice "xxxxyy")))
+         (is (succeeds? (twice "xxxxxxxxyyyy")))
+         (is (succeeds? (twice "xxxxxxxxxxxxxxxxxxxxyyyyyyyyyy")))
+         (is (fails? (twice "")))
+         (is (fails? (twice "xy")))
+         (is (fails? (twice "yxx")))
+         (is (fails? (twice "xyy")))
+         (is (fails? (twice "xxxyyy")))
+         (is (fails? (twice "xyyxyy")))
+         (is (fails? (twice "xxxxyyx")))
+         (is (fails? (twice "yyyxxxxxx")))
+         (is (fails? (twice "xxxxxxxxxxyy")))
+         (is (fails? (twice "xyxyxyxyxxxx")))
+         (is (fails? (twice "xxxxxxxxxxyyyy"))))
+
+;6
+(deftest test-a-plus-b-equals-c
+         (is (succeeds? (a-plus-b-equals-c "")))
+         (is (succeeds? (a-plus-b-equals-c "abcc")))
+         (is (succeeds? (a-plus-b-equals-c "ac")))
+         (is (succeeds? (a-plus-b-equals-c "bc")))
+         (is (succeeds? (a-plus-b-equals-c "aaaaabbbcccccccc")))
+         (is (succeeds? (a-plus-b-equals-c "aaaaaaaaabcccccccccc")))
+         (is (succeeds? (a-plus-b-equals-c
+                          "bbbbbbbbbbbbbccccccccccccc")))
+         (is (succeeds? (a-plus-b-equals-c
+                          "abbbbbbbbbbbbccccccccccccc")))
+         (is (succeeds? (a-plus-b-equals-c
+                          "aaaabbbbbbbbbbbccccccccccccccc")))
+         (is (fails? (a-plus-b-equals-c "a")))
+         (is (fails? (a-plus-b-equals-c "b")))
+         (is (fails? (a-plus-b-equals-c "c")))
+         (is (fails? (a-plus-b-equals-c "ab")))
+         (is (fails? (a-plus-b-equals-c "abc")))
+         (is (fails? (a-plus-b-equals-c "abbcc")))
+         (is (fails? (a-plus-b-equals-c "cccccc")))
+         (is (fails? (a-plus-b-equals-c "ccccaabb")))
+         (is (fails? (a-plus-b-equals-c "aaaaaaaa")))
+         (is (fails? (a-plus-b-equals-c "bbbbbbbbb")))
+         (is (fails? (a-plus-b-equals-c "aaaaaabbbbbb")))
+         (is (fails? (a-plus-b-equals-c "aabbcccccccccccccccccc"))))
 
 (run-tests)
