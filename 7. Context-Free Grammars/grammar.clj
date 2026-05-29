@@ -52,6 +52,16 @@
 "))
 
 
+;Problem 4
+(def o-in-the-middle (parser "
+  S = 'o'
+    | C S C
+
+  C = 'o'
+    | 'x'
+"))
+
+
 ;Problem 5
 (def twice (parser "
   P = epsilon
@@ -67,6 +77,23 @@
 "))
 
 
+;Problem 5
+(def twice (parser "
+  S = 'x' 'x' 'y'
+    | 'x' 'x' S 'y'
+"))
+
+
+;Problem 6
+(def a-plus-b-equals-c (parser "
+  S = A B
+
+  A = epsilon
+    | 'a' A 'c'
+
+  B = epsilon
+    | 'b' B 'c'
+"))
 ;tests
 ;1
 (deftest test-start-and-end
