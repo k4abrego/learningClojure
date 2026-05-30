@@ -1,11 +1,3 @@
-;----------------------------------------------------------
-; Problem Set #4: Higher-Order Functions
-; Date: March 27, 2026.
-; Authors:
-;          A01753979 Ana Karen Abrego Flores
-;          A01803514 Gabriel de Jesús Manzo Cuevas
-;----------------------------------------------------------
-
 (ns higher-order-functions
   (:require [clojure.test :refer [deftest is run-tests]])
   (:require [clojure.algo.generic.math-functions

@@ -1,10 +1,3 @@
-;----------------------------------------------------------
-; Problem Set #1: Introductory Exercises
-; Date: February 20, 2026.
-; Authors:
-;          A01753979 Ana Karen Abrego Flores
-;          A01803514 Gabriel de Jesús Manzo Cuevas
-;----------------------------------------------------------
 (ns introductory
   (:require [clojure.test :refer [deftest is run-tests]])
   (:require [clojure.math.numeric-tower :refer [sqrt]]))

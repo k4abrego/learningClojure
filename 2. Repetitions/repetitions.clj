@@ -1,11 +1,3 @@
-;----------------------------------------------------------
-; Problem Set #2: Repetitions
-; Date: March 3, 2025.
-; Authors:
-;          A01753979 Ana Karen Abrego Flores
-;          A01803514 Gabriel de Jesús Manzo Cuevas
-;----------------------------------------------------------
-
 (ns repetitions
   (:require [clojure.test :refer [deftest is run-tests]])
   (:require [clojure.math.numeric-tower :refer [sqrt]])

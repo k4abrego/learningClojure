@@ -1,16 +1,7 @@
-;----------------------------------------------------------
-; Problem Set #8: Context-Free Grammars
-; Date: May 29, 2026.
-; Authors:
-;          A01753979 Ana Karen Abrego Flores
-;          A01803514 Gabriel de Jesús Manzo Cuevas
-;----------------------------------------------------------
-
 (ns grammar
-(:require [clojure.test :refer [deftest is run-tests]])
-(:require [instaparse.core :refer [parser]])
-(:import (instaparse.gll Failure)))
-
+    (:require [clojure.test :refer [deftest is run-tests]])
+    (:require [instaparse.core :refer [parser]])
+    (:import (instaparse.gll Failure)))
 
 (defn fails? [r] (instance? Failure r))
 (defn succeeds? [r] (not (fails? r)))
@@ -29,72 +20,55 @@
 
 "))
 
+
 ;Problem 2
 (def palindrome (parser "
-  P = epsilon
-  | '0'
-  | '1'
-  | '0' 'P' '0'
-  | '1' 'P' '1'
- "))
 
+  P = epsilon
+    | '0'
+    | '1'
+    | '0' P '0'
+    | '1' P '1'
+
+"))
 
 ;Problem 3
 (def balanced-parentheses (parser "
-  P = epsilon
-  | '(' P ')' P
-"))
 
-;Problem 4
-(def o-in-the-middle (parser "
   P = epsilon
-  | P 'o' P
+    | '(' P ')' P
+
 "))
 
 
 ;Problem 4
 (def o-in-the-middle (parser "
-  S = 'o'
-    | C S C
-
-  C = 'o'
-    | 'x'
+  P = 'o'
+  | 'o' P 'o'
+  | 'o' P 'x'
+  | 'x' P 'o'
+  | 'x' P 'x'
 "))
-
 
 ;Problem 5
 (def twice (parser "
-  P = epsilon
-  | 'x' 'x' 'y' P
+  P = 'x' 'x' 'y'
+  | 'x' 'x' P 'y'
 "))
 
 ;Problem 6
 (def a-plus-b-equals-c (parser "
-  P = epsilon
-  | 'a' 'b' 'c' 'c' P
-  | 'a' 'c' P
-  | 'b' 'c' P
-"))
+  P = Q
+  | 'a' P 'c'
+
+  Q = epsilon
+  | 'b' Q 'c'
+" ))
 
 
-;Problem 5
-(def twice (parser "
-  S = 'x' 'x' 'y'
-    | 'x' 'x' S 'y'
-"))
 
-
-;Problem 6
-(def a-plus-b-equals-c (parser "
-  S = A B
-
-  A = epsilon
-    | 'a' A 'c'
-
-  B = epsilon
-    | 'b' B 'c'
-"))
 ;tests
+;
 ;1
 (deftest test-start-and-end
          (is (succeeds? (start-and-end "$")))

@@ -1,10 +1,3 @@
-;----------------------------------------------------------
-; Problem Set #7: Regular Expressions
-; Date: May 13, 2026.
-; Authors:
-;          A01753979 Ana Karen Abrego Flores
-;          A01803514 Gabriel de Jesús Manzo Cuevas
-;----------------------------------------------------------
 (ns regex
   (:require [clojure.test :refer [deftest is run-tests]]))
 
