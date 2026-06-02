@@ -1,7 +1,6 @@
 (ns turing-machines
     (:require [clojure.test :refer [deftest is run-tests]])
-    (:import (com.jetbrains.cef.remote.thrift TApplicationException)
-      (java.io Writer)))
+    (:import (java.io Writer)))
 
 (defrecord TM [initial-state accept-states transitions])
 
@@ -11,7 +10,7 @@
 
 (defmethod print-method Tape  ;use to define our tape and printed operations
            [self ^Writer writer]
-           (.writer writer (str self)))
+           (.write writer (str self)))
 
 (print (->Tape "aaa" \b "ccc"))
 
@@ -43,9 +42,9 @@
             :left (make-tape (or (butlast left) ()) ;no salga nil
                              (or (last left) \_)
                              (str head right)) ;the new right part (join)
-            :right ((make-tape (str left head)
-                               (or (first right) \_)
-                               (rest right))) ;the "" is always the empty list
+            :right (make-tape (str left head)
+                              (or (first right) \_)
+                              (rest right)) ;the "" is always the empty list
             (throw (ex-info (str "Bad direction: " direction) {}))))
 
 ;(shift-head (make-tape "aaa" \b "ccc") :right) ;=> aaab[c]cc
@@ -54,17 +53,17 @@
 ;(shift-head (make-tape "aaaaaa") :left) ;=>[_]aaaaaa
 ;(shift-head (make-tape "aaaaaa") :right) ;=>a[a]aaaaa
 
-(def accepts
-  [{:keys [initial-state accept-states transitions]} input]
-  (loop [tape (make-tape input)
-         current-state initial-state]
-        (if (contains? accept-states current-state)
-          (str tape)
-          (if-let [[write-symbol direction new-state]
-                   ((transitions current-state) (.head tape))]
-                  (recur (shift-head (write-tape tape write-symbol) direction)
-                         new-state)
-                  nil))))
+(defn accepts
+      [{:keys [initial-state accept-states transitions]} input]
+      (loop [tape (make-tape input)
+             current-state initial-state]
+            (if (contains? accept-states current-state)
+              (str tape)
+              (if-let [[write-symbol direction new-state]
+                       ((transitions current-state) (.head tape))]
+                      (recur (shift-head (write-tape tape write-symbol) direction)
+                             new-state)
+                      nil))))
 
 ;Problem 1
 (def tm-1 (->TM :q0
@@ -76,7 +75,60 @@
 (accepts tm-1 "")
 
 ;Problem 2
+(def tm-2 (->TM :q0
+                #{:q2}
+                {:q0 {\0 [\0 :right :q1]
+                      \1 [\1 :right :q3]}
+                 :q1 {\1 [\1 :right :q1]
+                      \_ [\_ :left :q2]}
+                 :q3 {\0 [\0 :right :q3]
+                      \_ [\_ :left :q2]}}))
 
+(accepts tm-2 "10000")
+
+;Problem 3
+(def tm-3 (->TM :q0
+                #{:q3}
+                {:q0 {\0 [\0 :right :q0]
+                      \1 [\1 :right :q0]
+                      \_ [\_ :left :q1]}
+
+                 :q1 {\0 [\1 :right :q2]
+                      \1 [\0 :left :q1]
+                      \_ [\1 :right :q2]}
+
+                 :q2 {\0 [\0 :right :q2]
+                      \_ [\_ :left :q3]}}))
+
+(accepts tm-3 "101") ;11[0]
+
+;4
+
+;5
+(def tm-5 (->TM :q0
+                #{:q10}
+                {:q0 {\a [\a :right :q0]
+                      \b [\b :left :q1]
+                      \_ [\_ :left :q9]}
+                 :q1 {\a [\b :right :q1]
+                      \b [\b :right :q1]
+                      \c [\c :left :q2]}
+                 :q2 {\b [\c :left :q3]}
+                 :q3 {\b [\c :right :q3]
+                      \c [\c :right :q3]
+                      \_ [\_ :left :q4]}
+                 :q4 {\c [\_ :left :q5]}
+                 :q5 {\c [\_ :left :q6]}
+                 :q6 {\c [\_ :left :q7]}
+                 :q7 {\a [\a :left :q7]
+                      \b [\b :left :q7]
+                      \c [\c :left :q7]
+                      \_ [\_ :right :q8]}
+                 :q8 {\a [\a :right :q0]
+                      \_ [\_ :right :q10]}
+                 :q9 {\_ [\_ :right :q10]}}))
+
+(accepts tm-5 "aaaaaaaaaabbbbbbbbbcccccccccc")
 
 
 ;tests
@@ -95,6 +147,56 @@
          (is (nil? (accepts tm-1 "aaaaaaa")))
          (is (nil? (accepts tm-1 "aaaaaaaaaaaaaaaaaaaaaaaaa"))))
 ;2
+(deftest test-problem2
+         (is (= "[0]"
+                (accepts tm-2 "0")))
+         (is (= "[1]"
+                (accepts tm-2 "1")))
+         (is (= "1[0]"
+                (accepts tm-2 "10")))
+         (is (= "0111111111[1]"
+                (accepts tm-2 "01111111111")))
+         (is (nil? (accepts tm-2 "")))
+         (is (nil? (accepts tm-2 "00")))
+         (is (nil? (accepts tm-2 "100000000001")))
+         (is (nil? (accepts tm-2 "10011010100101011"))))
 
+;3
+(deftest test-problem3
+         (is (= "[1]"
+                (accepts tm-3 "0")))
+         (is (= "1[0]"
+                (accepts tm-3 "1")))
+         (is (= "1[1]"
+                (accepts tm-3 "10")))
+         (is (= "10[0]"
+                (accepts tm-3 "11")))
+         (is (= "100[1]"
+                (accepts tm-3 "1000")))
+         (is (= "10101011[0]"
+                (accepts tm-3 "101010101")))
+         (is (= "000000000[1]"
+                (accepts tm-3 "0000000000")))
+         (is (= "11111000[0]"
+                (accepts tm-3 "111101111")))
+         (is (= "101001101[1]"
+                (accepts tm-3 "1010011010")))
+         (is (= "1000000000000000[0]"
+                (accepts tm-3 "1111111111111111"))))
+
+;5
+(deftest test-problem5
+         (is (accepts tm-5 ""))
+         (is (accepts tm-5 "abc"))
+         (is (accepts tm-5 "aaabbbccc"))
+         (is (accepts tm-5 "aaaaaaaaaabbbbbbbbbbcccccccccc"))
+         (is (nil? (accepts tm-5 "a")))
+         (is (nil? (accepts tm-5 "aabbc")))
+         (is (nil? (accepts tm-5 "aabaca")))
+         (is (nil? (accepts tm-5 "cccaaabbb")))
+         (is (nil? (accepts tm-5 "aaaaaccccc")))
+         (is (nil? (accepts tm-5 "abcabcabcabc")))
+         (is (nil? (accepts tm-5 "aaaaabbbbbcccccc")))
+         (is (nil? (accepts tm-5 "aaaaaaaaaabbbbbbbbbcccccccccc"))))
 
 (run-tests)
