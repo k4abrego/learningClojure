@@ -103,6 +103,25 @@
 (accepts tm-3 "101") ;11[0]
 
 ;4
+(def tm-4
+  (->TM :q0
+        #{:q7}
+        {:q0 {\a [\a :right :q0]
+              \$ [\$ :right :q1]}
+         :q1 {\a [\a :right :q1]
+              \_ [\_ :left :q2]}
+         :q2 {\a [\_ :left :q3]
+              \$ [\_ :left :q7]}
+         :q3 {\a [\a :left :q3]
+              \$ [\$ :left :q4]}
+         :q4 {\a [\a :left :q4]
+              \_ [\_ :right :q5]}
+         :q5 {\a [\_ :right :q0]
+              \$ [\_ :right :q6]}
+         :q6 {\a [\_ :right :q6]
+              \_ [\_ :right :q7]}}))
+
+(accepts tm-4 "aa$a")
 
 ;5
 (def tm-5 (->TM :q0
@@ -183,6 +202,25 @@
                 (accepts tm-3 "1010011010")))
          (is (= "1000000000000000[0]"
                 (accepts tm-3 "1111111111111111"))))
+
+;4
+(deftest test-problem4
+         (is (= "[_]"
+                (accepts tm-4 "$")))
+         (is (= "[_]"
+                (accepts tm-4 "a$a")))
+         (is (= "[a]"
+                (accepts tm-4 "aa$a")))
+         (is (= "aa[a]"
+                (accepts tm-4 "aaaaa$aa")))
+         (is (= "[_]"
+                (accepts tm-4 "aaaaa$aaaaaaaa")))
+         (is (= "aa[a]"
+                (accepts tm-4 "aaaaaaaa$aaaaa")))
+         (is (= "[_]"
+                (accepts tm-4 "$aaaaaaaaaaaaa")))
+         (is (= "aaaaaaaaaaaa[a]"
+                (accepts tm-4 "aaaaaaaaaaaaa$"))))
 
 ;5
 (deftest test-problem5
