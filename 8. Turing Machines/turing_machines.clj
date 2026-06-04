@@ -237,4 +237,20 @@
          (is (nil? (accepts tm-5 "aaaaabbbbbcccccc")))
          (is (nil? (accepts tm-5 "aaaaaaaaaabbbbbbbbbcccccccccc"))))
 
+;6
+(deftest test-problem6
+         (is (accepts tm-6 ""))
+         (is (accepts tm-6 "01"))
+         (is (accepts tm-6 "10"))
+         (is (accepts tm-6 "11000101"))
+         (is (accepts tm-6 "1010011010"))
+         (is (accepts tm-6 "1010101010101010"))
+         (is (accepts tm-6 "1111111100000000"))
+         (is (accepts tm-6 "00000111111111100000"))
+         (is (nil? (accepts tm-6 "11")))
+         (is (nil? (accepts tm-6 "01010")))
+         (is (nil? (accepts tm-6 "11111111000000001")))
+         (is (nil? (accepts tm-6 "10101111001101110101")))
+         (is (nil? (accepts tm-6 "000000000000000000000")))
+         (is (nil? (accepts tm-6 "11111111110111111111111"))))
 (run-tests)
