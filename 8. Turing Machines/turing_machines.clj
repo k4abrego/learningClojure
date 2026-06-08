@@ -149,6 +149,22 @@
 
 (accepts tm-5 "aaaaaaaaaabbbbbbbbbcccccccccc")
 
+;6
+(def tm-6 (->TM :q0
+                #{:q5}
+                {:q0 {\0 [\_ :right :q1]
+                      \1 [\_ :right :q2]
+                      \_ [\_ :right :q5]}
+                 :q1 {\0 [\0 :right :q1]
+                      \1 [\_ :left :q3]}
+                 :q2 {\1 [\1 :right :q2]
+                      \0 [\_ :left :q3]}
+                 :q3 {\0 [\0 :left :q3]
+                      \1 [\1 :left :q3]
+                      \_ [\_ :right :q4]}
+                 :q4 {\_ [\_ :right :q4]
+                      \0 [\_ :right :q1]
+                      \1 [\_ :right :q2]}}))
 
 ;tests
 ;1
