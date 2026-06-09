@@ -65,109 +65,18 @@
                              new-state)
                       nil))))
 
+;----------------------------------------------------------
 ;Problem 1
-(def tm-1 (->TM :q0
-                #{:q2}
-                {:q0 {\a [\a :right :q1] ;associated maps
-                      \_ [\_ :left :q2]} ;current-states
-                 :q1 {\a [\a :right :q0]}}))
-
-(accepts tm-1 "")
-
-;Problem 2
-(def tm-2 (->TM :q0
-                #{:q2}
-                {:q0 {\0 [\0 :right :q1]
-                      \1 [\1 :right :q3]}
-                 :q1 {\1 [\1 :right :q1]
-                      \_ [\_ :left :q2]}
-                 :q3 {\0 [\0 :right :q3]
-                      \_ [\_ :left :q2]}}))
-
-(accepts tm-2 "10000")
-
-;Problem 3
-(def tm-3 (->TM :q0
-                #{:q3}
-                {:q0 {\0 [\0 :right :q0]
-                      \1 [\1 :right :q0]
-                      \_ [\_ :left :q1]}
-
-                 :q1 {\0 [\1 :right :q2]
-                      \1 [\0 :left :q1]
-                      \_ [\1 :right :q2]}
-
-                 :q2 {\0 [\0 :right :q2]
-                      \_ [\_ :left :q3]}}))
-
-(accepts tm-3 "101") ;11[0]
-
-;4
-(def tm-4
+(def tm-1
+  "Accepts strings over {a} that contain an even number of a's, including the empty string"
   (->TM :q0
-        #{:q7}
-        {:q0 {\a [\a :right :q0]
-              \$ [\$ :right :q1]}
-         :q1 {\a [\a :right :q1]
-              \_ [\_ :left :q2]}
-         :q2 {\a [\_ :left :q3]
-              \$ [\_ :left :q7]}
-         :q3 {\a [\a :left :q3]
-              \$ [\$ :left :q4]}
-         :q4 {\a [\a :left :q4]
-              \_ [\_ :right :q5]}
-         :q5 {\a [\_ :right :q0]
-              \$ [\_ :right :q6]}
-         :q6 {\a [\_ :right :q6]
-              \_ [\_ :right :q7]}}))
+        #{:q2}
+        {:q0 {\a [\a :right :q1] ;associated maps
+              \_ [\_ :left :q2]} ;current-states
+         :q1 {\a [\a :right :q0]}}))
 
-(accepts tm-4 "aa$a")
+;(accepts tm-1 "")
 
-;5
-(def tm-5 (->TM :q0
-                #{:q10}
-                {:q0 {\a [\a :right :q0]
-                      \b [\b :left :q1]
-                      \_ [\_ :left :q9]}
-                 :q1 {\a [\b :right :q1]
-                      \b [\b :right :q1]
-                      \c [\c :left :q2]}
-                 :q2 {\b [\c :left :q3]}
-                 :q3 {\b [\c :right :q3]
-                      \c [\c :right :q3]
-                      \_ [\_ :left :q4]}
-                 :q4 {\c [\_ :left :q5]}
-                 :q5 {\c [\_ :left :q6]}
-                 :q6 {\c [\_ :left :q7]}
-                 :q7 {\a [\a :left :q7]
-                      \b [\b :left :q7]
-                      \c [\c :left :q7]
-                      \_ [\_ :right :q8]}
-                 :q8 {\a [\a :right :q0]
-                      \_ [\_ :right :q10]}
-                 :q9 {\_ [\_ :right :q10]}}))
-
-(accepts tm-5 "aaaaaaaaaabbbbbbbbbcccccccccc")
-
-;6
-(def tm-6 (->TM :q0
-                #{:q5}
-                {:q0 {\0 [\_ :right :q1]
-                      \1 [\_ :right :q2]
-                      \_ [\_ :right :q5]}
-                 :q1 {\0 [\0 :right :q1]
-                      \1 [\_ :left :q3]}
-                 :q2 {\1 [\1 :right :q2]
-                      \0 [\_ :left :q3]}
-                 :q3 {\0 [\0 :left :q3]
-                      \1 [\1 :left :q3]
-                      \_ [\_ :right :q4]}
-                 :q4 {\_ [\_ :right :q4]
-                      \0 [\_ :right :q1]
-                      \1 [\_ :right :q2]}}))
-
-;tests
-;1
 (deftest test-problem1
          (is (= "[_]"
                 (accepts tm-1 "")))
@@ -181,7 +90,22 @@
          (is (nil? (accepts tm-1 "aaa")))
          (is (nil? (accepts tm-1 "aaaaaaa")))
          (is (nil? (accepts tm-1 "aaaaaaaaaaaaaaaaaaaaaaaaa"))))
-;2
+
+;----------------------------------------------------------
+;Problem 2
+(def tm-2
+  "Accepts binary strings that start with one symbol and are followed only by the opposite symbol."
+  (->TM :q0
+        #{:q2}
+        {:q0 {\0 [\0 :right :q1]
+              \1 [\1 :right :q3]}
+         :q1 {\1 [\1 :right :q1]
+              \_ [\_ :left :q2]}
+         :q3 {\0 [\0 :right :q3]
+              \_ [\_ :left :q2]}}))
+
+;(accepts tm-2 "10000")
+
 (deftest test-problem2
          (is (= "[0]"
                 (accepts tm-2 "0")))
@@ -196,7 +120,25 @@
          (is (nil? (accepts tm-2 "100000000001")))
          (is (nil? (accepts tm-2 "10011010100101011"))))
 
-;3
+;----------------------------------------------------------
+;Problem 3
+(def tm-3
+  "Interprets the input as a binary number and adds one to it"
+  (->TM :q0
+        #{:q3}
+        {:q0 {\0 [\0 :right :q0]
+              \1 [\1 :right :q0]
+              \_ [\_ :left :q1]}
+
+         :q1 {\0 [\1 :right :q2]
+              \1 [\0 :left :q1]
+              \_ [\1 :right :q2]}
+
+         :q2 {\0 [\0 :right :q2]
+              \_ [\_ :left :q3]}}))
+
+;(accepts tm-3 "101") ;11[0]
+
 (deftest test-problem3
          (is (= "[1]"
                 (accepts tm-3 "0")))
@@ -219,7 +161,29 @@
          (is (= "1000000000000000[0]"
                 (accepts tm-3 "1111111111111111"))))
 
+;----------------------------------------------------------
 ;4
+(def tm-4
+  "Processes strings of the form a*$a* and removes matching a's from both sides of the $"
+  (->TM :q0
+        #{:q7}
+        {:q0 {\a [\a :right :q0]
+              \$ [\$ :right :q1]}
+         :q1 {\a [\a :right :q1]
+              \_ [\_ :left :q2]}
+         :q2 {\a [\_ :left :q3]
+              \$ [\_ :left :q7]}
+         :q3 {\a [\a :left :q3]
+              \$ [\$ :left :q4]}
+         :q4 {\a [\a :left :q4]
+              \_ [\_ :right :q5]}
+         :q5 {\a [\_ :right :q0]
+              \$ [\_ :right :q6]}
+         :q6 {\a [\_ :right :q6]
+              \_ [\_ :right :q7]}}))
+
+;(accepts tm-4 "$")
+
 (deftest test-problem4
          (is (= "[_]"
                 (accepts tm-4 "$")))
@@ -238,6 +202,41 @@
          (is (= "aaaaaaaaaaaa[a]"
                 (accepts tm-4 "aaaaaaaaaaaaa$"))))
 
+;----------------------------------------------------------
+;5
+(def tm-5
+  "Accepts strings of the form a^n b^n c^n, where n is greater than or equal to zero"
+  (->TM :q0
+        #{:q10}
+        {:q0 {\a [\a :right :q0]
+              \b [\b :left :q1]
+              \_ [\_ :left :q9]}
+         :q1 {\a [\b :right :q1]
+              \b [\b :right :q1]
+              \c [\c :left :q2]}
+         :q2 {\b [\c :left :q3]}
+         :q3 {\b [\c :right :q3]
+              \c [\c :right :q3]
+              \_ [\_ :left :q4]}
+         :q4 {\c [\_ :left :q5]}
+         :q5 {\c [\_ :left :q6]}
+         :q6 {\c [\_ :left :q7]}
+         :q7 {\a [\a :left :q7]
+              \b [\b :left :q7]
+              \c [\c :left :q7]
+              \_ [\_ :right :q8]}
+         :q8 {\a [\a :right :q0]
+              \_ [\_ :right :q10]}
+         :q9 {\_ [\_ :right :q10]}}))
+
+
+;(accepts tm-5 "") ;=> "[_]"
+;(accepts tm-5 "abc") ;=> "[_]"
+;(accepts tm-5 "aaaaaaaaaabbbbbbbbbbcccccccccc") ;=> "[_]"
+;(accepts tm-5 "aaaaaaaaaabbbbbbbbbcccccccccc") ;=> nil
+;(accepts tm-5 "a") ;=> nil
+
+
 ;5
 (deftest test-problem5
          (is (accepts tm-5 ""))
@@ -253,7 +252,43 @@
          (is (nil? (accepts tm-5 "aaaaabbbbbcccccc")))
          (is (nil? (accepts tm-5 "aaaaaaaaaabbbbbbbbbcccccccccc"))))
 
-;6
+;----------------------------------------------------------
+;6.
+(def tm-6
+  "Accepts binary strings that contain the same number of 0's and 1's"
+  (->TM :q0
+        #{:q10}
+        {:q0 {\0 [\0 :right :q0]
+              \1 [\1 :right :q0]
+              \_ [\_ :left :q1]}
+         :q1 {\0 [\_ :left :q2]
+              \1 [\_ :left :q3]
+              \_ [\_ :left :q9]}
+         :q2 {\0 [\0 :left :q2]
+              \1 [\1 :left :q2]
+              \_ [\_ :left :q4]}
+         :q3 {\0 [\0 :left :q3]
+              \1 [\1 :left :q3]
+              \_ [\_ :left :q5]}
+         :q4 {\0 [\0 :left :q4]
+              \1 [\1 :left :q6]
+              \_ [\0 :right :q8]}
+         :q5 {\1 [\1 :left :q5]
+              \0 [\0 :left :q6]
+              \_ [\1 :right :q8]}
+         :q6 {\0 [\0 :left :q6]
+              \1 [\1 :left :q6]
+              \_ [\_ :right :q7]}
+         :q7 {\0 [\_ :right :q8]
+              \1 [\_ :right :q8]}
+         :q8 {\0 [\0 :right :q8]
+              \1 [\1 :right :q8]
+              \_ [\_ :right :q0]}
+         :q9 {\_ [\_ :right :q10]}}))
+
+
+;(accepts tm-6 "11")
+
 (deftest test-problem6
          (is (accepts tm-6 ""))
          (is (accepts tm-6 "01"))
@@ -269,4 +304,7 @@
          (is (nil? (accepts tm-6 "10101111001101110101")))
          (is (nil? (accepts tm-6 "000000000000000000000")))
          (is (nil? (accepts tm-6 "11111111110111111111111"))))
+
+
+
 (run-tests)
