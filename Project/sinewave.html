@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>BASIC Lexical Highlighter</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<pre><span class="number">10</span> <span class="reserved-word">PRINT</span> <span class="function">TAB</span><span class="punctuation">(</span><span class="number">30</span><span class="punctuation">)</span><span class="punctuation">;</span><span class="string">"SINE WAVE"</span>
+<span class="number">20</span> <span class="reserved-word">PRINT</span> <span class="function">TAB</span><span class="punctuation">(</span><span class="number">15</span><span class="punctuation">)</span><span class="punctuation">;</span><span class="string">"CREATIVE COMPUTING  MORRISTOWN, NEW JERSEY"</span>
+<span class="number">30</span> <span class="reserved-word">PRINT</span><span class="punctuation">:</span> <span class="reserved-word">PRINT</span><span class="punctuation">:</span> <span class="reserved-word">PRINT</span><span class="punctuation">:</span> <span class="reserved-word">PRINT</span><span class="punctuation">:</span> <span class="reserved-word">PRINT</span>
+<span class="number">40</span> <span class="comment">REMARKABLE PROGRAM BY DAVID AHL</span>
+<span class="number">50</span> <span class="variable">B</span><span class="punctuation">=</span><span class="number">0</span>
+<span class="number">100</span> <span class="comment">REM  START LONG LOOP</span>
+<span class="number">110</span> <span class="reserved-word">FOR</span> <span class="variable">T</span><span class="punctuation">=</span><span class="number">0</span> <span class="reserved-word">TO</span> <span class="number">40</span> <span class="reserved-word">STEP</span> <span class="number">.25</span>
+<span class="number">120</span> <span class="variable">A</span><span class="punctuation">=</span><span class="function">INT</span><span class="punctuation">(</span><span class="number">26</span><span class="punctuation">+</span><span class="number">25</span><span class="punctuation">*</span><span class="function">SIN</span><span class="punctuation">(</span><span class="variable">T</span><span class="punctuation">)</span><span class="punctuation">)</span>
+<span class="number">130</span> <span class="reserved-word">PRINT</span> <span class="function">TAB</span><span class="punctuation">(</span><span class="variable">A</span><span class="punctuation">)</span><span class="punctuation">;</span>
+<span class="number">140</span> <span class="reserved-word">IF</span> <span class="variable">B</span><span class="punctuation">=</span><span class="number">1</span> <span class="reserved-word">THEN</span> <span class="number">180</span>
+<span class="number">150</span> <span class="reserved-word">PRINT</span> <span class="string">"CREATIVE"</span>
+<span class="number">160</span> <span class="variable">B</span><span class="punctuation">=</span><span class="number">1</span>
+<span class="number">170</span> <span class="reserved-word">GOTO</span> <span class="number">200</span>
+<span class="number">180</span> <span class="reserved-word">PRINT</span> <span class="string">"COMPUTING"</span>
+<span class="number">190</span> <span class="variable">B</span><span class="punctuation">=</span><span class="number">0</span>
+<span class="number">200</span> <span class="reserved-word">NEXT</span> <span class="variable">T</span>
+<span class="number">999</span> <span class="reserved-word">END</span> <span class="bad-token">@</span><span class="bad-token">#</span><span class="bad-token">%</span></pre>
+</body>
+</html>
