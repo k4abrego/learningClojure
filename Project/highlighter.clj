@@ -1,11 +1,3 @@
-;----------------------------------------------------------
-; Project: BASIC Lexical Highlighter
-; Date: June 10, 2026.
-; Authors:
-;          A01753979 Ana Karen Abrego Flores
-;          A01803514 Gabriel de Jesús Manzo Cuevas
-;----------------------------------------------------------
-
 (ns highlighter
   (:require [clojure.string :as str]))
 
