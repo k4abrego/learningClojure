@@ -23,7 +23,7 @@
 
 ;tests:
 ;1
-(deftest test-c-identifier
+(deftest test-c-identifie¿+}
   (is (re-matches c-identifier "_"))
   (is (re-matches c-identifier "a"))
   (is (re-matches c-identifier "A"))
