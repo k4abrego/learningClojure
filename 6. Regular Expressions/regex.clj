@@ -12,7 +12,7 @@
 (def scheme-integer #"\d+|#(b[01]+|o[0-7]+|d\d+|x[0-9a-fA-F]+)")
 
 ;Problem 4
-(def java-integer #"(0|[1-9][0-9]*|0[xX][0-9a-fA-F]+|[lL]?")
+(def java-integer #"(0|[1-9][0-9]*|0[xX][0-9a-fA-F]+|0[0-7]+)[lL]?")
 
 ;Problem 5
 (def java-float #"(([0-9]+\.[0-9]*|\.[0-9]+)([eE][+-]?[0-9]+)?|[0-9]+[eE][+-]?[0-9]+)[fFdD]?")
