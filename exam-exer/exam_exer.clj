@@ -153,5 +153,5 @@
 
 (def scheme-radix #"#b[01]+|#o[0-7]+|#d[0-9]+|#x[0-9 a-f A-F]")
 
-(re-matches scheme-radixx "#b101")
+(re-matches scheme-radix "#b101")
 
