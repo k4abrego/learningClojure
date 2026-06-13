@@ -155,3 +155,13 @@
 
 (re-matches scheme-radix "#b101")
 
+
+;----------------------------------------------------------
+;Write a function in Clojure called how-many-div-4 that receives as
+; input a sequence of integers and returns how many of these numbers
+; are exactly divisible by 4.
+(defn how-many-div-4
+      [s]
+      (count (filter #(zero? (mod % 4)) s)))
+
+(how-many-div-4 [4 8 10 12 15]) ; => 3
