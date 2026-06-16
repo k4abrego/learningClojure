@@ -1,63 +1,74 @@
 (ns highlighter
-  (:require [clojure.string :as str]))
+    (:require [clojure.string :as str]))
 
-(def regex #"(?x)
-      ( -?\d+[.]\d*(?:E-?\d+)? | -?[.]\d+(?:E-?\d+)? | -?\d+ ) # Group 1: numbers
-    | ( \"[^\"]*\" )                                           # Group 2: strings
-    | ( REM[^\n]* )                                            # Group 3: comments
-    | ( [A-Z]{1,2}\d?\$? )                                     # Group 4: variables
-    | ( PRINT|GOTO|IF|THEN|FOR|TO|STEP|NEXT|END )              # Group 5: reserved words
-    | ( ABS|SIN|COS|TAN|INT|TAB )                              # Group 6: predefined functions
-    | ( <=|>=|<>|[()+\-*/^=<>:;,] )                            # Group 7: punctuation
-    | ( \s )                                                   # Group 8: whitespace
-    | ( . )                                                    # Group 9: bad token
+(def regex
+  #"(?x)
+      ( -?(?:\d+[.]\d*|[.]\d+|\d+)(?:E[+-]?\d+)? )           # numbers
+    | ( \"[^\"]*\" )                                          # strings
+    | ( REM[^\n]* )                                           # comments
+    | ( PRINT|GOTO|IF|THEN|FOR|TO|STEP|NEXT|END )             # reserved words
+    | ( ABS|SIN|COS|TAN|INT|TAB )                             # predefined functions
+    | ( [A-Z] \w* )                                           # variables
+    | ( <=|>=|<>|[()+\-*/^=<>:;,] )                           # punctuation
+    | ( \s )                                                  # whitespace
+    | ( . )                                                   # bad token
 ")
 
 (def categories
-  [nil :number :string :comment :variable :reserved-word
-   :function :punctuation :whitespace :bad-token])
+  [nil :number :string :comment :reserved-word :function
+   :variable :punctuation :whitespace :bad-token])
 
-(defn capturing-group-index ;returns the index of the matching regex"
-  [v]
-  (inc (count (take-while nil? (rest v)))))
+(defn capturing-group-index
+      [v]
+      (inc (count (take-while nil? (rest v)))))
 
 (defn lexical-analysis
-  [file-content]
-  (let [matches (re-seq regex file-content)]
-    (map (fn [match]
-           [(match 0) (categories (capturing-group-index match))])
-         matches)))
+      [file-content]
+      (let [matches (re-seq regex file-content)]
+           (map (fn [match]
+                    [(match 0) (categories (capturing-group-index match))])
+                matches)))
 
-(defn escape  ;replaced in the output document by their corresponding escape sequences
-  [s]
-  (-> s
-      (str/replace "&" "&amp;")
-      (str/replace "<" "&lt;")
-      (str/replace ">" "&gt;")))
-;
+(defn escape
+      [s]
+      (-> s
+          (str/replace "&" "&amp;")
+          (str/replace "<" "&lt;")
+          (str/replace ">" "&gt;")))
 
-(defn token->html ;converts a tokenn and its category into a span
-  [[token category]]
-  (if (= category :whitespace)
-    token
-    (format "<span class=\"%s\">%s</span>"
-            (name category)
-            (escape token))))
+(defn token->html
+      [[token category]]
+      (if (= category :whitespace)
+        token
+        (format "<span class=\"%s\">%s</span>"
+                (name category)
+                (escape token))))
 
-(defn htmlize ;the complete token sequence into highlighted html
-  [tokens]
-  (apply str (map token->html tokens)))
+(defn htmlize
+      [tokens]
+      (apply str (map token->html tokens)))
+
+(defn html-document
+      [contenido]
+      (str "<!DOCTYPE html>\n"
+           "<html>\n"
+           "<head>\n"
+           "  <meta charset=\"UTF-8\">\n"
+           "  <title>BASIC Lexical Highlighter</title>\n"
+           "  <link rel=\"stylesheet\" href=\"styles.css\">\n"
+           "</head>\n"
+           "<body>\n"
+           "<pre>" contenido "</pre>\n"
+           "</body>\n"
+           "</html>\n"))
 
 (defn basic->html
-  [file-name]
-  (let [file-content (slurp file-name)
-        html-content (htmlize (lexical-analysis file-content))
-        template (slurp "Project/sinewave.html")
-        output-name (str/replace file-name #"\.bas$" ".html")]
-    (spit output-name
-          (str/replace template "flop" html-content))))
+      [file-name]
+      (let [file-content (slurp file-name)
+            html-content (htmlize (lexical-analysis file-content))
+            output-name (str/replace file-name #"\.bas$" ".html")]
+           (spit output-name (html-document html-content))))
 
-; (lexical-analysis (slurp "sinewave.bas"))
-; (basic->html "sinewave.bas")
-
-(basic->html "Project/sinewave.bas")
+(load-file "Project/highlighter.clj")
+;(highlighter/basic->html "Project/otro.bas")
+(basic->html "Project/banner.bas")
