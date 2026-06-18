@@ -177,6 +177,10 @@
                             (cons (if (zero? (rem i 2)) i 0)
                                   r))))))
 
+(defn triplicate
+      [s]
+      (interleave s s s))
+
 
 
 
